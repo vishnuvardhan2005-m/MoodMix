@@ -10,22 +10,22 @@ const IntensitySlider = ({ intensity, onChangeIntensity }) => {
   const descriptor = getIntensityDescriptor(intensity);
 
   return (
-    <div className="space-y-4 p-6 bg-[#FAF8F2] border border-[#D8D3C8]">
-      <div className="flex items-baseline justify-between border-b border-[#D8D3C8] pb-2">
-        <span className="text-xs font-mono tracking-widest text-[#6B6B65] uppercase">
+    <div className="space-y-2 p-3 sm:p-3.5 bg-[#FAF8F2] border border-[#D8D3C8]">
+      <div className="flex items-baseline justify-between border-b border-[#D8D3C8] pb-1">
+        <span className="text-[10px] font-mono tracking-widest text-[#6B6B65] uppercase">
           02 / SET INTENSITY
         </span>
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-mono tracking-widest text-[#111111] uppercase font-bold">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono tracking-wider text-[#111111] uppercase font-bold">
             {descriptor}
           </span>
-          <span className="text-sm font-mono font-extrabold text-[#111111] px-2 py-0.5 border border-[#111111] bg-white">
+          <span className="text-xs font-mono font-extrabold text-[#111111] px-1.5 py-0.5 border border-[#111111] bg-white">
             {intensity}%
           </span>
         </div>
       </div>
 
-      <div className="space-y-2 pt-2">
+      <div className="space-y-1 pt-1">
         <div className="relative flex items-center">
           <input
             type="range"
@@ -38,7 +38,7 @@ const IntensitySlider = ({ intensity, onChangeIntensity }) => {
           />
         </div>
 
-        <div className="flex justify-between text-[11px] font-mono text-[#6B6B65] tracking-widest uppercase">
+        <div className="flex justify-between text-[10px] font-mono text-[#6B6B65] tracking-wider uppercase">
           <span>LOW (10–35)</span>
           <span>MEDIUM (36–65)</span>
           <span>HIGH (66–100)</span>
