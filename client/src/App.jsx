@@ -10,10 +10,10 @@ function App() {
   return (
     <PlayerProvider>
       <Router>
-        <div className="min-h-screen bg-[#090d16] text-slate-100 flex flex-col antialiased">
+        <div className="h-screen w-screen overflow-hidden bg-[#F4F0E7] text-[#111111] flex flex-col antialiased">
           <Header />
 
-          <main className="flex-1">
+          <main className="flex-1 overflow-hidden relative">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/player" element={<PlayerPage />} />
