@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '../context/PlayerContext';
 import ProgressBar from './ProgressBar';
 import VolumeControl from './VolumeControl';
-import { Play, Pause, SkipBack, SkipForward, AlertTriangle } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Disc, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const MiniPlayer = () => {
@@ -33,15 +33,15 @@ const MiniPlayer = () => {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 80, opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="fixed bottom-0 left-0 right-0 z-50 glass-panel border-t border-slate-800/80 px-4 py-2.5 shadow-2xl backdrop-blur-xl"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-[#151515] text-[#FAF8F2] border-t border-neutral-800 px-4 sm:px-8 py-3 shadow-2xl"
       >
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-          {/* Song Info & Cover */}
+          {/* Track Info & Artwork Sleeve */}
           <div
             onClick={() => navigate(`/player?id=${currentSong._id}`)}
-            className="flex items-center gap-3 w-full md:w-1/4 cursor-pointer group min-w-0"
+            className="flex items-center gap-3.5 w-full md:w-1/4 cursor-pointer group min-w-0"
           >
-            <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-slate-800 border border-slate-700/60 shrink-0">
+            <div className="relative w-11 h-11 bg-neutral-800 border border-neutral-700 overflow-hidden shrink-0">
               <img
                 src={currentSong.coverUrl}
                 alt={currentSong.title}
@@ -49,52 +49,48 @@ const MiniPlayer = () => {
               />
             </div>
             <div className="min-w-0">
-              <h4 className="font-bold text-slate-100 text-sm truncate group-hover:text-purple-300 transition-colors">
-                {currentSong.title}
-              </h4>
               <div className="flex items-center gap-2">
-                <p className="text-xs text-slate-400 truncate">{currentSong.artist}</p>
-                {currentSong.language && (
-                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-950/80 text-purple-300 border border-purple-800/50 font-medium">
-                    {currentSong.language}
-                  </span>
-                )}
+                <Disc className={`w-3.5 h-3.5 ${isPlaying ? 'text-amber-400 animate-spin' : 'text-neutral-500'}`} />
+                <h4 className="font-serif font-bold text-white text-sm truncate group-hover:text-amber-400 transition-colors">
+                  {currentSong.title}
+                </h4>
               </div>
+              <p className="text-xs text-neutral-400 truncate">{currentSong.artist}</p>
             </div>
           </div>
 
           {/* Controls & Scrubber */}
           <div className="flex flex-col items-center gap-1.5 w-full md:w-2/4">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-5">
               <button
                 type="button"
                 onClick={playPrev}
-                className="text-slate-400 hover:text-white transition-colors cursor-pointer"
-                title="Previous Track"
+                aria-label="Previous track"
+                className="text-neutral-400 hover:text-white transition-colors cursor-pointer"
               >
-                <SkipBack className="w-5 h-5" />
+                <SkipBack className="w-4 h-4" />
               </button>
 
               <button
                 type="button"
                 onClick={togglePlay}
-                className="w-10 h-10 rounded-full bg-purple-600 hover:bg-purple-500 text-white flex items-center justify-center shadow-lg shadow-purple-900/50 transition-transform active:scale-95 cursor-pointer"
-                title={isPlaying ? 'Pause' : 'Play'}
+                aria-label={isPlaying ? 'Pause track' : 'Play track'}
+                className="w-9 h-9 bg-amber-400 hover:bg-amber-300 text-black flex items-center justify-center transition-transform active:scale-95 cursor-pointer"
               >
                 {isPlaying ? (
-                  <Pause className="w-5 h-5 fill-white" />
+                  <Pause className="w-4 h-4 fill-current" />
                 ) : (
-                  <Play className="w-5 h-5 fill-white ml-0.5" />
+                  <Play className="w-4 h-4 fill-current ml-0.5" />
                 )}
               </button>
 
               <button
                 type="button"
                 onClick={playNext}
-                className="text-slate-400 hover:text-white transition-colors cursor-pointer"
-                title="Next Track"
+                aria-label="Next track"
+                className="text-neutral-400 hover:text-white transition-colors cursor-pointer"
               >
-                <SkipForward className="w-5 h-5" />
+                <SkipForward className="w-4 h-4" />
               </button>
             </div>
 
@@ -105,7 +101,7 @@ const MiniPlayer = () => {
             />
 
             {audioError && (
-              <div className="flex items-center gap-1 text-[11px] text-red-400">
+              <div className="flex items-center gap-1 text-[11px] font-mono text-red-400">
                 <AlertTriangle className="w-3 h-3" />
                 <span>{audioError}</span>
               </div>

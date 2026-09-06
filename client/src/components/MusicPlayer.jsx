@@ -3,7 +3,7 @@ import { usePlayer } from '../context/PlayerContext';
 import ProgressBar from './ProgressBar';
 import VolumeControl from './VolumeControl';
 import AudioVisualizer from './AudioVisualizer';
-import { Play, Pause, SkipBack, SkipForward, Zap, Music, ListMusic, Eye, EyeOff, Activity, BarChart2, Waves } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Disc, Eye, EyeOff, Activity, BarChart2, Waves } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const MusicPlayer = () => {
@@ -24,7 +24,7 @@ const MusicPlayer = () => {
     toggleMute
   } = usePlayer();
 
-  const [visualizerEnabled, setVisualizerEnabled] = useState(true);
+  const [visualizerEnabled, setVisualizerEnabled] = useState(false);
   const [visualizerMode, setVisualizerMode] = useState('circular');
 
   if (!currentSong) return null;
@@ -32,79 +32,74 @@ const MusicPlayer = () => {
   const currentMood = currentSong.moods?.[0] || 'calm';
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      {/* Main Expanded Player */}
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      {/* Main Digital Vinyl Player Deck */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.97 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="lg:col-span-7 glass-panel p-6 sm:p-8 rounded-3xl space-y-6 glow-purple border-purple-500/30 shadow-2xl"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="lg:col-span-7 bg-[#151515] text-[#FAF8F2] p-6 sm:p-10 border border-[#262626] shadow-2xl space-y-8"
       >
-        {/* Visualizer Controls Top Bar */}
-        <div className="flex items-center justify-between glass-card p-2.5 rounded-2xl">
+        {/* Deck Header Masthead */}
+        <div className="flex items-center justify-between border-b border-neutral-800 pb-3 text-xs font-mono tracking-widest text-[#A0A09C]">
+          <span>VINYL DECK — MODEL 33 RPM</span>
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setVisualizerEnabled(!visualizerEnabled)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-                visualizerEnabled
-                  ? 'bg-purple-600/30 text-purple-300 border border-purple-500/40'
-                  : 'bg-slate-800 text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              {visualizerEnabled ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-              Visualizer {visualizerEnabled ? 'ON' : 'OFF'}
-            </button>
+            <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-amber-400 animate-pulse' : 'bg-neutral-600'}`} />
+            <span className="uppercase">{isPlaying ? 'PLAYING' : 'PAUSED'}</span>
           </div>
+        </div>
 
-          {/* Mode Selector */}
+        {/* Visualizer Toggle & Mode Controls */}
+        <div className="flex items-center justify-between bg-neutral-900/80 p-3 border border-neutral-800 text-xs font-mono">
+          <button
+            type="button"
+            onClick={() => setVisualizerEnabled(!visualizerEnabled)}
+            className={`px-3 py-1 border transition-colors cursor-pointer flex items-center gap-2 ${
+              visualizerEnabled
+                ? 'bg-amber-400 text-black border-amber-400 font-bold'
+                : 'bg-neutral-800 text-neutral-300 border-neutral-700 hover:text-white'
+            }`}
+          >
+            {visualizerEnabled ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+            VISUALIZER {visualizerEnabled ? 'ON' : 'OFF'}
+          </button>
+
           {visualizerEnabled && (
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setVisualizerMode('circular')}
-                className={`p-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1 ${
-                  visualizerMode === 'circular'
-                    ? 'bg-purple-600 text-white'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                className={`p-1.5 border transition-colors cursor-pointer ${
+                  visualizerMode === 'circular' ? 'bg-white text-black border-white' : 'text-neutral-400 hover:text-white border-neutral-800'
                 }`}
                 title="Circular Mode"
               >
                 <Activity className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Circular</span>
               </button>
-
               <button
                 type="button"
                 onClick={() => setVisualizerMode('bars')}
-                className={`p-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1 ${
-                  visualizerMode === 'bars'
-                    ? 'bg-purple-600 text-white'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                className={`p-1.5 border transition-colors cursor-pointer ${
+                  visualizerMode === 'bars' ? 'bg-white text-black border-white' : 'text-neutral-400 hover:text-white border-neutral-800'
                 }`}
-                title="Frequency Bars Mode"
+                title="Bars Mode"
               >
                 <BarChart2 className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Bars</span>
               </button>
-
               <button
                 type="button"
                 onClick={() => setVisualizerMode('wave')}
-                className={`p-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1 ${
-                  visualizerMode === 'wave'
-                    ? 'bg-purple-600 text-white'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                className={`p-1.5 border transition-colors cursor-pointer ${
+                  visualizerMode === 'wave' ? 'bg-white text-black border-white' : 'text-neutral-400 hover:text-white border-neutral-800'
                 }`}
-                title="Wave & Particles Mode"
+                title="Wave Mode"
               >
                 <Waves className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Wave</span>
               </button>
             </div>
           )}
         </div>
 
-        {/* Audio Visualizer or Album Artwork Display */}
+        {/* Display: Visualizer or Spinning Vinyl Disc Deck */}
         {visualizerEnabled ? (
           <div className="relative">
             <AudioVisualizer
@@ -113,66 +108,71 @@ const MusicPlayer = () => {
               enabled={visualizerEnabled}
               height={320}
             />
-            <div className="absolute bottom-3 left-3 flex items-center gap-2">
+            <div className="absolute bottom-3 left-3 flex items-center gap-3 bg-black/80 p-2 border border-neutral-800">
               <img
                 src={currentSong.coverUrl}
                 alt={currentSong.title}
-                className="w-10 h-10 rounded-lg object-cover border border-slate-700 shadow-md"
+                className="w-10 h-10 object-cover"
               />
-              <div>
-                <p className="text-xs font-bold text-white leading-none">{currentSong.title}</p>
-                <p className="text-[11px] text-slate-400">{currentSong.artist}</p>
+              <div className="font-mono text-xs">
+                <p className="font-bold text-white leading-none">{currentSong.title}</p>
+                <p className="text-neutral-400 text-[11px]">{currentSong.artist}</p>
               </div>
             </div>
           </div>
         ) : (
-          <div className="relative aspect-square max-w-md mx-auto rounded-2xl overflow-hidden shadow-2xl group border border-slate-700/60 bg-slate-900">
-            <img
-              src={currentSong.coverUrl}
-              alt={currentSong.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-50" />
-            <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold bg-slate-950/80 backdrop-blur-md text-amber-400 border border-slate-700 flex items-center gap-1">
-              <Zap className="w-3.5 h-3.5 fill-amber-400" />
-              Lvl {currentSong.energy}/10
+          <div className="relative flex items-center justify-center py-6 overflow-hidden">
+            {/* Album Sleeve + Sliding Vinyl Disc */}
+            <div className="relative flex items-center justify-center max-w-md w-full">
+              {/* Vinyl Record Disc behind artwork */}
+              <div
+                className={`w-64 h-64 sm:w-80 sm:h-80 rounded-full vinyl-grooves border-4 border-neutral-900 shadow-2xl flex items-center justify-center transition-all duration-700 ${
+                  isPlaying ? 'animate-vinyl-spin' : 'animate-vinyl-spin animate-vinyl-spin-paused'
+                }`}
+              >
+                {/* Center Record Label */}
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-amber-400 text-black border-4 border-neutral-950 flex flex-col items-center justify-center text-center p-2 shadow-inner">
+                  <Disc className="w-5 h-5 text-black" />
+                  <span className="font-serif text-[10px] font-bold tracking-tight uppercase leading-none mt-1">
+                    MOODMIX
+                  </span>
+                  <span className="text-[8px] font-mono tracking-widest text-neutral-800 mt-0.5">
+                    33 RPM
+                  </span>
+                </div>
+              </div>
+
+              {/* Album Cover Sleeve Overlapping */}
+              <div className="absolute left-0 w-48 h-48 sm:w-60 sm:h-60 bg-neutral-900 border-2 border-neutral-700 shadow-2xl overflow-hidden z-10">
+                <img
+                  src={currentSong.coverUrl}
+                  alt={currentSong.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
           </div>
         )}
 
-        {/* Track Title & Meta */}
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">{currentSong.title}</h1>
-          <p className="text-lg font-medium text-slate-300 flex items-center justify-center gap-2">
-            <Music className="w-4 h-4 text-purple-400" />
-            {currentSong.artist}
-          </p>
+        {/* Track Title & Metadata */}
+        <div className="text-center space-y-2 border-t border-neutral-800 pt-6">
+          <h1 className="font-serif text-3xl sm:text-4xl text-white tracking-tight">{currentSong.title}</h1>
+          <p className="text-sm font-sans font-medium text-neutral-400">{currentSong.artist}</p>
 
-          <div className="flex items-center justify-center gap-2 pt-1">
-            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
-              {currentSong.genre}
+          <div className="flex items-center justify-center gap-3 pt-2 text-xs font-mono text-neutral-400">
+            <span className="px-2.5 py-0.5 border border-neutral-800">
+              {currentSong.language || 'English'}
             </span>
-            {currentSong.language && (
-              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-purple-950 text-purple-300 border border-purple-700/60">
-                {currentSong.language}
-              </span>
-            )}
+            <span className="px-2.5 py-0.5 border border-neutral-800">
+              GENRE: {currentSong.genre}
+            </span>
+            <span className="px-2.5 py-0.5 border border-neutral-800 text-amber-400">
+              ENERGY LVL {currentSong.energy}/10
+            </span>
           </div>
         </div>
 
-        {/* Mood badges */}
-        <div className="flex items-center justify-center flex-wrap gap-2">
-          {currentSong.moods?.map((m, idx) => (
-            <span
-              key={idx}
-              className="text-xs font-semibold px-3 py-0.5 rounded-full bg-purple-950/70 text-purple-200 border border-purple-800/40 capitalize"
-            >
-              #{m}
-            </span>
-          ))}
-        </div>
-
-        {/* Progress Bar Scrubber */}
+        {/* Timeline Scrubber */}
         <ProgressBar
           currentTime={currentTime}
           duration={duration}
@@ -180,8 +180,8 @@ const MusicPlayer = () => {
           className="pt-2"
         />
 
-        {/* Action Controls */}
-        <div className="flex items-center justify-between pt-2">
+        {/* Controls Bar */}
+        <div className="flex items-center justify-between border-t border-neutral-800 pt-6">
           <VolumeControl
             volume={volume}
             isMuted={isMuted}
@@ -189,11 +189,12 @@ const MusicPlayer = () => {
             onToggleMute={toggleMute}
           />
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <button
               type="button"
               onClick={playPrev}
-              className="text-slate-400 hover:text-white transition-colors p-2 cursor-pointer"
+              aria-label="Previous track"
+              className="text-neutral-400 hover:text-white transition-colors cursor-pointer p-2"
             >
               <SkipBack className="w-6 h-6" />
             </button>
@@ -201,19 +202,21 @@ const MusicPlayer = () => {
             <button
               type="button"
               onClick={togglePlay}
-              className="w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white flex items-center justify-center shadow-xl shadow-purple-900/50 transition-transform active:scale-95 cursor-pointer"
+              aria-label={isPlaying ? 'Pause track' : 'Play track'}
+              className="w-14 h-14 bg-amber-400 hover:bg-amber-300 text-black flex items-center justify-center shadow-lg transition-transform active:scale-95 cursor-pointer"
             >
               {isPlaying ? (
-                <Pause className="w-6 h-6 fill-white" />
+                <Pause className="w-6 h-6 fill-current" />
               ) : (
-                <Play className="w-6 h-6 fill-white ml-0.5" />
+                <Play className="w-6 h-6 fill-current ml-0.5" />
               )}
             </button>
 
             <button
               type="button"
               onClick={playNext}
-              className="text-slate-400 hover:text-white transition-colors p-2 cursor-pointer"
+              aria-label="Next track"
+              className="text-neutral-400 hover:text-white transition-colors cursor-pointer p-2"
             >
               <SkipForward className="w-6 h-6" />
             </button>
@@ -221,42 +224,41 @@ const MusicPlayer = () => {
         </div>
       </motion.div>
 
-      {/* Up Next Queue */}
+      {/* Up Next Queue Sidebar */}
       <div className="lg:col-span-5 space-y-4">
-        <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-          <ListMusic className="w-5 h-5 text-purple-400" />
-          Queue ({queue.length})
-        </h3>
+        <div className="border-b border-[#D8D3C8] pb-2 flex items-baseline justify-between">
+          <h3 className="font-serif text-2xl text-[#111111] uppercase">UP NEXT IN QUEUE</h3>
+          <span className="text-xs font-mono text-[#6B6B65]">[{queue.length} TRACKS]</span>
+        </div>
 
-        <div className="space-y-2.5 max-h-[560px] overflow-y-auto pr-1">
-          {queue.map((song) => {
+        <div className="space-y-2 max-h-[580px] overflow-y-auto pr-1">
+          {queue.map((song, idx) => {
             const isSelected = currentSong._id === song._id;
             return (
               <div
                 key={song._id}
                 onClick={() => playSong(song, queue)}
-                className={`p-3 rounded-2xl glass-card transition-all cursor-pointer flex items-center justify-between ${
-                  isSelected ? 'ring-2 ring-purple-500 bg-purple-950/40' : ''
+                className={`p-3 border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                  isSelected ? 'bg-[#151515] text-[#FAF8F2] border-[#151515]' : 'bg-[#FAF8F2] hover:bg-white text-[#111111] border-[#D8D3C8]'
                 }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
+                  <span className={`text-xs font-mono w-5 text-right shrink-0 ${isSelected ? 'text-amber-400' : 'text-[#6B6B65]'}`}>
+                    {(idx + 1).toString().padStart(2, '0')}
+                  </span>
                   <img
                     src={song.coverUrl}
                     alt={song.title}
-                    className="w-12 h-12 rounded-xl object-cover"
+                    className="w-10 h-10 object-cover shrink-0 border border-[#D8D3C8]"
                   />
                   <div className="min-w-0">
-                    <h4 className="font-bold text-slate-100 text-sm truncate">{song.title}</h4>
-                    <p className="text-xs text-slate-400 truncate">{song.artist}</p>
+                    <h4 className="font-serif text-sm font-bold truncate">{song.title}</h4>
+                    <p className={`text-xs truncate ${isSelected ? 'text-neutral-400' : 'text-[#6B6B65]'}`}>{song.artist}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  {song.language && (
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300">
-                      {song.language}
-                    </span>
-                  )}
-                </div>
+                <span className={`text-[10px] font-mono px-2 py-0.5 border shrink-0 ${isSelected ? 'border-neutral-700 text-neutral-300' : 'border-[#D8D3C8] text-[#6B6B65]'}`}>
+                  {song.language}
+                </span>
               </div>
             );
           })}

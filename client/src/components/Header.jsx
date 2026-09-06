@@ -1,60 +1,53 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Music, Disc, Sparkles } from 'lucide-react';
 
 const Header = () => {
   const location = useLocation();
-
   const isActive = (path) => location.pathname === path;
 
   return (
-    <header className="sticky top-0 z-40 glass-panel border-b border-slate-800/80 px-4 sm:px-6 py-4">
+    <header className="sticky top-0 z-40 bg-[#F4F0E7]/90 backdrop-blur-md border-b border-[#D8D3C8] px-4 sm:px-8 py-5">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Brand Logo */}
+        {/* Brand Masthead */}
         <Link
           to="/"
           aria-label="MoodMix Home Page"
-          className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded-xl"
+          className="group flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 focus:outline-none"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-cyan-400 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
-            <Music className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-200 to-purple-400 bg-clip-text text-transparent">
-                MoodMix
-              </span>
-              <Sparkles className="w-4 h-4 text-purple-400 animate-pulse" />
-            </div>
-            <p className="text-xs text-slate-400 font-medium">Soundtrack Your Emotion</p>
-          </div>
+          <span className="font-serif text-2xl sm:text-3xl tracking-tight text-[#111111] group-hover:opacity-80 transition-opacity">
+            MOODMIX
+          </span>
+          <span className="text-xs font-mono tracking-widest text-[#6B6B65] uppercase">
+            — a digital record player for your mood
+          </span>
         </Link>
 
-        {/* Navigation Links */}
-        <nav className="flex items-center gap-2">
+        {/* Minimal Navigation */}
+        <nav className="flex items-center gap-6 text-xs sm:text-sm font-semibold tracking-widest uppercase">
           <Link
             to="/"
             aria-label="Navigate to Home Page"
-            className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 ${
+            className={`transition-colors py-1 focus:outline-none ${
               isActive('/')
-                ? 'bg-purple-600/20 text-purple-300 border border-purple-500/30'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                ? 'text-[#111111] border-b-2 border-[#111111]'
+                : 'text-[#6B6B65] hover:text-[#111111]'
             }`}
           >
-            <Music className="w-4 h-4" />
-            <span>Home</span>
+            HOME
           </Link>
+
+          <span className="text-[#D8D3C8] select-none">/</span>
+
           <Link
             to="/player"
             aria-label="Navigate to Player Page"
-            className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 ${
+            className={`transition-colors py-1 focus:outline-none ${
               isActive('/player')
-                ? 'bg-purple-600/20 text-purple-300 border border-purple-500/30'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                ? 'text-[#111111] border-b-2 border-[#111111]'
+                : 'text-[#6B6B65] hover:text-[#111111]'
             }`}
           >
-            <Disc className="w-4 h-4" />
-            <span>Player</span>
+            PLAYER
           </Link>
         </nav>
       </div>

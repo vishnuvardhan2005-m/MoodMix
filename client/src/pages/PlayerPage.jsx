@@ -37,31 +37,31 @@ const PlayerPage = () => {
 
   if (!currentSong) {
     return (
-      <div className="max-w-md mx-auto my-20 p-8 glass-card rounded-2xl text-center space-y-4">
-        <Disc className="w-12 h-12 text-slate-500 mx-auto" />
-        <h2 className="text-xl font-bold text-slate-100">No Track Loaded</h2>
-        <p className="text-sm text-slate-400">Return to home to select a track.</p>
+      <div className="max-w-md mx-auto my-20 p-8 bg-[#FAF8F2] border border-[#D8D3C8] text-center space-y-4">
+        <Disc className="w-10 h-10 text-[#6B6B65] mx-auto" />
+        <h2 className="font-serif text-2xl text-[#111111] uppercase">No Track Loaded</h2>
+        <p className="text-xs font-mono text-[#6B6B65]">Return to home to select a track to listen to.</p>
         <button
           type="button"
           onClick={() => navigate('/')}
-          className="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-xl hover:bg-purple-500 transition-colors cursor-pointer"
+          className="px-6 py-3 bg-[#111111] text-[#F4F0E7] text-xs font-mono uppercase tracking-widest cursor-pointer"
         >
-          Browse Library
+          BROWSE CATALOG
         </button>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 pb-36 space-y-8">
-      {/* Back button */}
+    <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 pb-40 space-y-6">
+      {/* Back to library link */}
       <button
         type="button"
         onClick={() => navigate('/')}
-        className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors glass-card px-3.5 py-1.5 rounded-xl cursor-pointer"
+        className="inline-flex items-center gap-2 text-xs font-mono tracking-widest text-[#6B6B65] hover:text-[#111111] transition-colors cursor-pointer py-1"
       >
         <ArrowLeft className="w-4 h-4" />
-        Back to Library
+        <span>BACK TO CATALOG</span>
       </button>
 
       <MusicPlayer />

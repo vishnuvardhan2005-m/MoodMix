@@ -5,7 +5,7 @@ import MoodSelector from '../components/MoodSelector';
 import IntensitySlider from '../components/IntensitySlider';
 import LanguageSelector from '../components/LanguageSelector';
 import { usePlayer } from '../context/PlayerContext';
-import { Sparkles, Play, RefreshCw, AlertCircle, Music } from 'lucide-react';
+import { ArrowRight, RefreshCw, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const HomePage = () => {
@@ -41,7 +41,7 @@ const HomePage = () => {
 
       setRecommendations(songsList);
       const langLabel = lang.toUpperCase() === 'ALL' ? 'ALL LANGUAGES' : lang.toUpperCase();
-      setMixTitle(`${mood.toUpperCase()} • ${val}% INTENSITY • ${langLabel}`);
+      setMixTitle(`${mood.toUpperCase()} · ${val}% INTENSITY · ${langLabel}`);
 
       if (songsList.length > 0 && shouldAutoPlay) {
         playSong(songsList[0], songsList);
@@ -52,7 +52,7 @@ const HomePage = () => {
       }
     } catch (err) {
       console.error('Failed to generate mix:', err);
-      setError('Unable to connect to MoodMix server. Please check backend status.');
+      setError('Unable to connect to MoodMix server. Please verify backend service status.');
     } finally {
       setLoading(false);
       setInitialLoading(false);
@@ -60,32 +60,19 @@ const HomePage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-36 space-y-12">
-      {/* Hero Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center max-w-3xl mx-auto space-y-3"
-      >
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20">
-          <Sparkles className="w-3.5 h-3.5" />
-          Interactive Music Engine
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-          What is your <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">MoodMix</span> today?
+    <div className="max-w-5xl mx-auto px-4 sm:px-8 py-10 pb-40 space-y-12">
+      {/* Editorial Title Banner */}
+      <div className="space-y-2 border-b border-[#D8D3C8] pb-6">
+        <h1 className="font-serif text-4xl sm:text-6xl tracking-tight text-[#111111] uppercase leading-none">
+          MUSIC FOR YOUR MOOD.
         </h1>
-        <p className="text-slate-400 text-sm sm:text-base">
-          Select a mood, tune your intensity, pick your language, and let MoodMix create your custom soundtrack.
+        <p className="text-xs font-mono tracking-widest text-[#6B6B65] uppercase">
+          ISSUE N° 01 — EDITORIAL DIGITAL VINYL ENGINE
         </p>
-      </motion.div>
+      </div>
 
-      {/* Mood Control Panel Setup Steps */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="glass-panel p-6 sm:p-8 rounded-3xl space-y-8 border-purple-500/20 shadow-2xl glow-purple"
-      >
+      {/* Music Selector Form Setup */}
+      <div className="space-y-8">
         <MoodSelector
           selectedMood={selectedMood}
           onSelectMood={setSelectedMood}
@@ -101,81 +88,80 @@ const HomePage = () => {
           onSelectLanguage={setSelectedLanguage}
         />
 
-        {/* Start My Mix Button */}
-        <div className="flex justify-center pt-2">
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
+        {/* Create My Mix Action Button */}
+        <div className="pt-2 flex justify-start">
+          <button
+            type="button"
             onClick={() => handleGenerateMix(selectedMood, intensity, selectedLanguage, true)}
             disabled={loading}
-            aria-label="Start My Mix recommendation generation"
-            className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-base shadow-xl shadow-purple-900/40 flex items-center justify-center gap-3 disabled:opacity-50 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
+            aria-label="Create My Mix"
+            className="w-full sm:w-auto px-10 py-5 bg-[#111111] hover:bg-black text-[#F4F0E7] font-mono text-sm tracking-widest uppercase border border-[#111111] flex items-center justify-center gap-4 transition-all duration-200 cursor-pointer disabled:opacity-50"
           >
             {loading ? (
-              <RefreshCw className="w-5 h-5 animate-spin" />
+              <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
             ) : (
-              <Play className="w-5 h-5 fill-white" />
+              <ArrowRight className="w-4 h-4 text-amber-400" />
             )}
-            <span>Start My Mix</span>
-          </motion.button>
+            <span>CREATE MY MIX →</span>
+          </button>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Recommended Results Section */}
-      <div ref={resultsRef} className="space-y-6 pt-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
+      {/* Recommended Songs Editorial List */}
+      <div ref={resultsRef} className="space-y-6 pt-8 border-t border-[#D8D3C8]">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-[#D8D3C8] pb-3">
           <div>
-            <h2 className="text-2xl font-bold text-slate-100 flex items-center gap-2">
-              <Music className="w-5 h-5 text-purple-400" />
-              Recommended Songs
+            <h2 className="font-serif text-3xl text-[#111111] uppercase tracking-tight">
+              YOUR RECOMMENDED MIX
             </h2>
             {mixTitle && (
-              <p className="text-xs text-purple-300 font-mono mt-0.5">
-                Current Mix: {mixTitle}
+              <p className="text-xs font-mono text-[#6B6B65] tracking-wider uppercase mt-1">
+                SELECTION: {mixTitle}
               </p>
             )}
           </div>
-          <span className="text-xs font-mono text-slate-400">
-            {recommendations.length} track{recommendations.length !== 1 ? 's' : ''} matched
+          <span className="text-xs font-mono text-[#6B6B65] tracking-widest uppercase">
+            [{recommendations.length} TRACKS MATCHED]
           </span>
         </div>
 
         {initialLoading || loading ? (
-          <div className="flex flex-col items-center justify-center py-16 gap-3 text-slate-400">
-            <RefreshCw className="w-8 h-8 animate-spin text-purple-400" />
-            <p className="text-sm font-medium">Finding suitable tracks for your mood & language...</p>
+          <div className="flex flex-col items-center justify-center py-16 gap-3 text-[#6B6B65] font-mono text-xs">
+            <RefreshCw className="w-6 h-6 animate-spin text-[#111111]" />
+            <span>SELECTING CURATED TRACKS FROM CATALOG...</span>
           </div>
         ) : error ? (
-          <div className="glass-card p-8 rounded-2xl text-center max-w-md mx-auto space-y-4 border-red-500/30">
-            <AlertCircle className="w-10 h-10 text-red-400 mx-auto" />
-            <p className="text-sm text-slate-300">{error}</p>
+          <div className="p-8 bg-[#FAF8F2] border border-red-300 text-center max-w-md mx-auto space-y-3">
+            <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
+            <p className="text-xs font-mono text-[#111111]">{error}</p>
             <button
               type="button"
               onClick={() => handleGenerateMix(selectedMood, intensity, selectedLanguage, true)}
-              className="px-4 py-2 bg-purple-600 text-white text-xs font-semibold rounded-xl hover:bg-purple-500 transition-colors cursor-pointer"
+              className="px-4 py-2 bg-[#111111] text-[#F4F0E7] font-mono text-xs uppercase"
             >
-              Try Again
+              TRY AGAIN
             </button>
           </div>
         ) : recommendations.length === 0 ? (
-          <div className="text-center py-16 glass-card rounded-2xl space-y-2">
-            <p className="text-lg font-semibold text-slate-300">No songs found for this mood & language combination.</p>
-            <p className="text-xs text-slate-500">Try choosing 'All Languages' or selecting another mood.</p>
+          <div className="text-center py-16 bg-[#FAF8F2] border border-[#D8D3C8] space-y-2">
+            <p className="font-serif text-xl text-[#111111]">No tracks found for this configuration.</p>
+            <p className="text-xs font-mono text-[#6B6B65]">Try choosing 'All Languages' or selecting another mood.</p>
           </div>
         ) : (
           <AnimatePresence mode="wait">
             <motion.div
               key={`${selectedMood}-${intensity}-${selectedLanguage}`}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+              className="border-t border-[#D8D3C8]"
             >
-              {recommendations.map((song) => (
+              {recommendations.map((song, idx) => (
                 <SongCard
                   key={song._id}
                   song={song}
+                  index={idx}
                   queue={recommendations}
                 />
               ))}
