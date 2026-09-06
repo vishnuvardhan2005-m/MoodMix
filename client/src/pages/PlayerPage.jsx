@@ -53,18 +53,20 @@ const PlayerPage = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 pb-40 space-y-6">
+    <div className="h-full max-w-7xl mx-auto p-3 sm:p-5 overflow-hidden flex flex-col space-y-2 sm:space-y-3">
       {/* Back to library link */}
       <button
         type="button"
         onClick={() => navigate('/')}
-        className="inline-flex items-center gap-2 text-xs font-mono tracking-widest text-[#6B6B65] hover:text-[#111111] transition-colors cursor-pointer py-1"
+        className="inline-flex items-center gap-2 text-xs font-mono tracking-widest text-[#6B6B65] hover:text-[#111111] transition-colors cursor-pointer shrink-0"
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="w-3.5 h-3.5" />
         <span>BACK TO CATALOG</span>
       </button>
 
-      <MusicPlayer />
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <MusicPlayer />
+      </div>
     </div>
   );
 };
