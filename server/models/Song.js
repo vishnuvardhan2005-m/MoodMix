@@ -17,6 +17,14 @@ const songSchema = new mongoose.Schema(
       required: [true, 'Audio URL is required'],
       trim: true
     },
+    youtubeVideoId: {
+      type: String,
+      trim: true
+    },
+    youtubeUrl: {
+      type: String,
+      trim: true
+    },
     coverUrl: {
       type: String,
       required: [true, 'Cover image URL is required'],
@@ -41,8 +49,8 @@ const songSchema = new mongoose.Schema(
     language: {
       type: String,
       required: [true, 'Language is required'],
-      enum: ['English', 'Telugu', 'Hindi', 'Instrumental'],
-      default: 'English',
+      enum: ['English', 'Telugu', 'Hindi', 'Instrumental', 'Unknown'],
+      default: 'Unknown',
       trim: true
     }
   },

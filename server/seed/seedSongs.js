@@ -5,307 +5,184 @@ const Song = require('../models/Song');
 dotenv.config();
 
 const sampleSongs = [
-  // ==================== TELUGU TRACKS (15) ====================
   {
-    title: 'Godavari Odduana',
-    artist: 'Srinivas Instrumental Ensemble',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80',
-    moods: ['calm', 'romantic'],
-    energy: 3,
-    genre: 'Folk Flute',
-    language: 'Telugu'
-  },
-  {
-    title: 'Malle Puvvu Melody',
-    artist: 'Tollywood Strings Quartet',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80',
-    moods: ['romantic', 'happy'],
-    energy: 5,
-    genre: 'Tollywood Romance',
-    language: 'Telugu'
-  },
-  {
-    title: 'Dappu Rhythm Energy',
-    artist: 'Telangana Beat Project',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80',
-    moods: ['energetic', 'happy'],
-    energy: 9,
-    genre: 'Folk Beats',
-    language: 'Telugu'
-  },
-  {
-    title: 'Vennela Varsham',
-    artist: 'Sravana Acoustic',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80',
-    moods: ['calm', 'sad'],
-    energy: 2,
-    genre: 'Acoustic Melody',
-    language: 'Telugu'
-  },
-  {
-    title: 'Hyderabad Lo-Fi Night',
-    artist: 'Deccan Chill Beats',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600&auto=format&fit=crop&q=80',
-    moods: ['focus', 'calm'],
+    title: 'YouTube Track 1',
+    artist: 'Unknown',
+    youtubeVideoId: 'HZ_Q20ir-gg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=HZ_Q20ir-gg&list=RDMMHZ_Q20ir-gg&start_radio=1',
+    audioUrl: 'https://www.youtube.com/watch?v=HZ_Q20ir-gg&list=RDMMHZ_Q20ir-gg&start_radio=1',
+    coverUrl: 'https://img.youtube.com/vi/HZ_Q20ir-gg/hqdefault.jpg',
+    moods: ['romantic', 'calm', 'happy'],
     energy: 4,
-    genre: 'Lo-Fi Melody',
+    genre: 'YouTube Track',
     language: 'Telugu'
   },
   {
-    title: 'Sankranti Sambaralu',
-    artist: 'Rayalaseema Folk Collective',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600&auto=format&fit=crop&q=80',
-    moods: ['happy', 'energetic'],
-    energy: 8,
-    genre: 'Celebration Folk',
-    language: 'Telugu'
-  },
-  {
-    title: 'Aakasa Veedhilo',
-    artist: 'Kaveri Soundscapes',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=600&auto=format&fit=crop&q=80',
-    moods: ['sad', 'romantic'],
-    energy: 3,
-    genre: 'Ambient Veena',
-    language: 'Telugu'
-  },
-  {
-    title: 'Charminar Synth Drive',
-    artist: 'Cyber Tollywood',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=600&auto=format&fit=crop&q=80',
-    moods: ['energetic', 'focus'],
-    energy: 10,
-    genre: 'Synth Fusion',
-    language: 'Telugu'
-  },
-  {
-    title: 'Prema Geetham',
-    artist: 'Kalyani Violin Trio',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?w=600&auto=format&fit=crop&q=80',
-    moods: ['romantic', 'calm'],
-    energy: 4,
-    genre: 'Romantic Instrumental',
-    language: 'Telugu'
-  },
-  {
-    title: 'Ekaki Manasu',
-    artist: 'Nirvana Piano',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80',
-    moods: ['sad', 'focus'],
-    energy: 1,
-    genre: 'Solitude Piano',
-    language: 'Telugu'
-  },
-  {
-    title: 'Vizag Sea Breeze',
-    artist: 'Coastal Chill Trio',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80',
-    moods: ['calm', 'happy'],
-    energy: 4,
-    genre: 'Chillwave',
-    language: 'Telugu'
-  },
-  {
-    title: 'Mind Deep Study',
-    artist: 'Gautami Brainwave',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&auto=format&fit=crop&q=80',
-    moods: ['focus', 'calm'],
-    energy: 3,
-    genre: 'Focus Ambient',
-    language: 'Telugu'
-  },
-  {
-    title: 'Jaathara Celebration',
-    artist: 'Janapada Beats',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop&q=80',
-    moods: ['energetic', 'happy'],
-    energy: 9,
-    genre: 'Tollywood Dance',
-    language: 'Telugu'
-  },
-  {
-    title: 'Kanti Paapa',
-    artist: 'Anurag Lullaby Project',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1511295742362-92c96b124e52?w=600&auto=format&fit=crop&q=80',
-    moods: ['sad', 'calm'],
-    energy: 2,
-    genre: 'Acoustic Lullaby',
-    language: 'Telugu'
-  },
-  {
-    title: 'Anandam Every Day',
-    artist: 'Chaitanya Group',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=600&auto=format&fit=crop&q=80',
-    moods: ['happy', 'romantic'],
-    energy: 6,
-    genre: 'Feel-Good Pop',
-    language: 'Telugu'
-  },
-
-  // ==================== ENGLISH TRACKS (15) ====================
-  {
-    title: 'Neon Horizons',
-    artist: 'Aether Wave',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80',
-    moods: ['calm', 'focus'],
-    energy: 3,
-    genre: 'Synthwave',
-    language: 'English'
-  },
-  {
-    title: 'Midnight Pulse',
-    artist: 'Lunar Eclipse',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80',
-    moods: ['energetic', 'happy'],
-    energy: 9,
-    genre: 'Electronic Dance',
-    language: 'English'
-  },
-  {
-    title: 'Quiet Reflections',
-    artist: 'Solitude Echoes',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80',
-    moods: ['sad', 'calm'],
-    energy: 2,
-    genre: 'Ambient Piano',
-    language: 'English'
-  },
-  {
-    title: 'Cyber Drive',
-    artist: 'Glitch Horizon',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=600&auto=format&fit=crop&q=80',
-    moods: ['focus', 'energetic'],
-    energy: 8,
-    genre: 'Cyberpunk',
-    language: 'English'
-  },
-  {
-    title: 'Sunlight Drift',
-    artist: 'Breeze Collective',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600&auto=format&fit=crop&q=80',
-    moods: ['happy', 'chill', 'calm'],
-    energy: 5,
-    genre: 'Lo-Fi Pop',
-    language: 'English'
-  },
-  {
-    title: 'Velvet Starlight',
-    artist: 'Silk & Strings',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=600&auto=format&fit=crop&q=80',
-    moods: ['romantic', 'calm'],
-    energy: 4,
-    genre: 'Soul Chill',
-    language: 'English'
-  },
-  {
-    title: 'Overdrive Ignite',
-    artist: 'Velocity Nitro',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80',
-    moods: ['energetic', 'focus'],
-    energy: 10,
-    genre: 'Synthcore',
-    language: 'English'
-  },
-  {
-    title: 'Cosmic Journey',
-    artist: 'Starlight Dreamer',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600&auto=format&fit=crop&q=80',
-    moods: ['focus', 'calm'],
-    energy: 3,
-    genre: 'Deep Ambient',
-    language: 'English'
-  },
-  {
-    title: 'Tidal Flow',
-    artist: 'Oceanic Whispers',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80',
-    moods: ['calm', 'romantic'],
-    energy: 4,
-    genre: 'Chillwave',
-    language: 'English'
-  },
-  {
-    title: 'Rainy Alleyway',
-    artist: 'Midnight Rain',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=600&auto=format&fit=crop&q=80',
-    moods: ['sad', 'romantic'],
-    energy: 3,
-    genre: 'Indie Nocturne',
-    language: 'English'
-  },
-  {
-    title: 'Golden Horizon',
-    artist: 'Solaris Duo',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80',
+    title: 'YouTube Track 2',
+    artist: 'Unknown',
+    youtubeVideoId: 'JqFzhcWo3EU',
+    youtubeUrl: 'https://www.youtube.com/watch?v=JqFzhcWo3EU',
+    audioUrl: 'https://www.youtube.com/watch?v=JqFzhcWo3EU',
+    coverUrl: 'https://img.youtube.com/vi/JqFzhcWo3EU/hqdefault.jpg',
     moods: ['happy', 'energetic'],
     energy: 7,
-    genre: 'Upbeat Synth',
+    genre: 'YouTube Track',
+    language: 'Telugu'
+  },
+  {
+    title: 'YouTube Track 3',
+    artist: 'Unknown',
+    youtubeVideoId: 'GF8HgqemgHk',
+    youtubeUrl: 'https://www.youtube.com/watch?v=GF8HgqemgHk&list=RDGF8HgqemgHk&start_radio=1',
+    audioUrl: 'https://www.youtube.com/watch?v=GF8HgqemgHk&list=RDGF8HgqemgHk&start_radio=1',
+    coverUrl: 'https://img.youtube.com/vi/GF8HgqemgHk/hqdefault.jpg',
+    moods: ['sad', 'calm', 'romantic'],
+    energy: 2,
+    genre: 'YouTube Track',
+    language: 'Telugu'
+  },
+  {
+    title: 'YouTube Track 4',
+    artist: 'Unknown',
+    youtubeVideoId: 'SVH7z6y8Pq0',
+    youtubeUrl: 'https://www.youtube.com/watch?v=SVH7z6y8Pq0',
+    audioUrl: 'https://www.youtube.com/watch?v=SVH7z6y8Pq0',
+    coverUrl: 'https://img.youtube.com/vi/SVH7z6y8Pq0/hqdefault.jpg',
+    moods: ['energetic', 'focus'],
+    energy: 9,
+    genre: 'YouTube Track',
+    language: 'Telugu'
+  },
+  {
+    title: 'YouTube Track 5',
+    artist: 'Unknown',
+    youtubeVideoId: 'taoXDPLo0nA',
+    youtubeUrl: 'https://www.youtube.com/watch?v=taoXDPLo0nA',
+    audioUrl: 'https://www.youtube.com/watch?v=taoXDPLo0nA',
+    coverUrl: 'https://img.youtube.com/vi/taoXDPLo0nA/hqdefault.jpg',
+    moods: ['calm', 'focus', 'happy'],
+    energy: 5,
+    genre: 'YouTube Track',
     language: 'English'
   },
   {
-    title: 'Passion Spark',
-    artist: 'Blush Quartet',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?w=600&auto=format&fit=crop&q=80',
+    title: 'YouTube Track 6',
+    artist: 'Unknown',
+    youtubeVideoId: 'oR2ANZeD37w',
+    youtubeUrl: 'https://www.youtube.com/watch?v=oR2ANZeD37w',
+    audioUrl: 'https://www.youtube.com/watch?v=oR2ANZeD37w',
+    coverUrl: 'https://img.youtube.com/vi/oR2ANZeD37w/hqdefault.jpg',
     moods: ['romantic', 'happy'],
     energy: 6,
-    genre: 'Pop Romance',
+    genre: 'YouTube Track',
     language: 'English'
   },
   {
-    title: 'Deep Synapse',
-    artist: 'Neural Matrix',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&auto=format&fit=crop&q=80',
-    moods: ['focus', 'calm'],
-    energy: 4,
-    genre: 'Ambient Focus',
+    title: 'YouTube Track 7',
+    artist: 'Unknown',
+    youtubeVideoId: 'tlRlavbg3sY',
+    youtubeUrl: 'https://www.youtube.com/watch?v=tlRlavbg3sY&list=RDtlRlavbg3sY&start_radio=1',
+    audioUrl: 'https://www.youtube.com/watch?v=tlRlavbg3sY&list=RDtlRlavbg3sY&start_radio=1',
+    coverUrl: 'https://img.youtube.com/vi/tlRlavbg3sY/hqdefault.jpg',
+    moods: ['calm', 'sad'],
+    energy: 3,
+    genre: 'YouTube Track',
     language: 'English'
   },
   {
-    title: 'Melancholy Sunset',
-    artist: 'Dusk Echoes',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop&q=80',
-    moods: ['sad', 'calm'],
-    energy: 1,
-    genre: 'Acoustic Sad',
-    language: 'English'
-  },
-  {
-    title: 'Summer Sunshine',
-    artist: 'Vibe Electric',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3',
-    coverUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop&q=80',
-    moods: ['happy', 'energetic'],
+    title: 'YouTube Track 8',
+    artist: 'Unknown',
+    youtubeVideoId: '4oMO8IYwOos',
+    youtubeUrl: 'https://www.youtube.com/watch?v=4oMO8IYwOos&list=PLjPPOf7d9WMPJkC8gDuif4A5OJBU91Zth&pp=8AUB',
+    audioUrl: 'https://www.youtube.com/watch?v=4oMO8IYwOos&list=PLjPPOf7d9WMPJkC8gDuif4A5OJBU91Zth&pp=8AUB',
+    coverUrl: 'https://img.youtube.com/vi/4oMO8IYwOos/hqdefault.jpg',
+    moods: ['energetic', 'happy', 'focus'],
     energy: 8,
-    genre: 'Tropical Pop',
+    genre: 'YouTube Track',
+    language: 'English'
+  },
+  {
+    title: 'YouTube Track 9',
+    artist: 'Unknown',
+    youtubeVideoId: '6DfaBq2rVoE',
+    youtubeUrl: 'https://www.youtube.com/watch?v=6DfaBq2rVoE',
+    audioUrl: 'https://www.youtube.com/watch?v=6DfaBq2rVoE',
+    coverUrl: 'https://img.youtube.com/vi/6DfaBq2rVoE/hqdefault.jpg',
+    moods: ['happy', 'romantic', 'energetic'],
+    energy: 6,
+    genre: 'YouTube Track',
+    language: 'Telugu'
+  },
+  {
+    title: 'YouTube Track 10',
+    artist: 'Unknown',
+    youtubeVideoId: 'aozErj9NqeE',
+    youtubeUrl: 'https://www.youtube.com/watch?v=aozErj9NqeE',
+    audioUrl: 'https://www.youtube.com/watch?v=aozErj9NqeE',
+    coverUrl: 'https://img.youtube.com/vi/aozErj9NqeE/hqdefault.jpg',
+    moods: ['calm', 'romantic'],
+    energy: 4,
+    genre: 'YouTube Track',
+    language: 'Telugu'
+  },
+  {
+    title: 'YouTube Track 11',
+    artist: 'Unknown',
+    youtubeVideoId: 'GYfdWiAnshE',
+    youtubeUrl: 'https://www.youtube.com/watch?v=GYfdWiAnshE',
+    audioUrl: 'https://www.youtube.com/watch?v=GYfdWiAnshE',
+    coverUrl: 'https://img.youtube.com/vi/GYfdWiAnshE/hqdefault.jpg',
+    moods: ['energetic', 'focus', 'happy'],
+    energy: 8,
+    genre: 'YouTube Track',
+    language: 'Telugu'
+  },
+  {
+    title: 'YouTube Track 12',
+    artist: 'Unknown',
+    youtubeVideoId: 'W0DM5lcj6mw',
+    youtubeUrl: 'https://www.youtube.com/watch?v=W0DM5lcj6mw',
+    audioUrl: 'https://www.youtube.com/watch?v=W0DM5lcj6mw',
+    coverUrl: 'https://img.youtube.com/vi/W0DM5lcj6mw/hqdefault.jpg',
+    moods: ['happy', 'romantic', 'calm'],
+    energy: 5,
+    genre: 'YouTube Track',
+    language: 'English'
+  },
+  {
+    title: 'YouTube Track 13',
+    artist: 'Unknown',
+    youtubeVideoId: 'kPhpHvnnn0Q',
+    youtubeUrl: 'https://www.youtube.com/watch?v=kPhpHvnnn0Q',
+    audioUrl: 'https://www.youtube.com/watch?v=kPhpHvnnn0Q',
+    coverUrl: 'https://img.youtube.com/vi/kPhpHvnnn0Q/hqdefault.jpg',
+    moods: ['energetic', 'happy'],
+    energy: 7,
+    genre: 'YouTube Track',
+    language: 'English'
+  },
+  {
+    title: 'YouTube Track 14',
+    artist: 'Unknown',
+    youtubeVideoId: 'SezFNtFCeQY',
+    youtubeUrl: 'https://www.youtube.com/watch?v=SezFNtFCeQY',
+    audioUrl: 'https://www.youtube.com/watch?v=SezFNtFCeQY',
+    coverUrl: 'https://img.youtube.com/vi/SezFNtFCeQY/hqdefault.jpg',
+    moods: ['sad', 'calm', 'reflective'],
+    energy: 3,
+    genre: 'YouTube Track',
+    language: 'English'
+  },
+  {
+    title: 'YouTube Track 15',
+    artist: 'Unknown',
+    youtubeVideoId: 'pQbvrDl3kcY',
+    youtubeUrl: 'https://www.youtube.com/watch?v=pQbvrDl3kcY',
+    audioUrl: 'https://www.youtube.com/watch?v=pQbvrDl3kcY',
+    coverUrl: 'https://img.youtube.com/vi/pQbvrDl3kcY/hqdefault.jpg',
+    moods: ['focus', 'calm', 'happy'],
+    energy: 5,
+    genre: 'YouTube Track',
     language: 'English'
   }
 ];
@@ -319,10 +196,10 @@ const seedDatabase = async () => {
     console.log('Clearing existing songs...');
     await Song.deleteMany();
 
-    console.log('Inserting 30 verified songs (15 Telugu, 15 English)...');
+    console.log('Inserting 15 YouTube tracks...');
     const createdSongs = await Song.insertMany(sampleSongs);
 
-    console.log(`Successfully seeded ${createdSongs.length} songs into MongoDB!`);
+    console.log(`Successfully seeded ${createdSongs.length} YouTube tracks into MongoDB!`);
     process.exit(0);
   } catch (error) {
     console.error('Error seeding database:', error.message);
