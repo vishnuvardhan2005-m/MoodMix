@@ -61,13 +61,16 @@ const HomePage = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-8 py-10 pb-40 space-y-12">
-      {/* Editorial Title Banner */}
-      <div className="space-y-2 border-b border-[#D8D3C8] pb-6">
-        <h1 className="font-serif text-4xl sm:text-6xl tracking-tight text-[#111111] uppercase leading-none">
+      {/* Editorial Dark Header Banner */}
+      <div className="bg-[#151515] text-white p-8 sm:p-10 border border-[#262626] shadow-xl space-y-3">
+        <p className="text-xs font-mono tracking-widest text-amber-400 uppercase">
+          ISSUE N° 01 — EDITORIAL DIGITAL VINYL ENGINE
+        </p>
+        <h1 className="font-serif text-4xl sm:text-6xl tracking-tight text-white uppercase leading-none">
           MUSIC FOR YOUR MOOD.
         </h1>
-        <p className="text-xs font-mono tracking-widest text-[#6B6B65] uppercase">
-          ISSUE N° 01 — EDITORIAL DIGITAL VINYL ENGINE
+        <p className="text-xs font-mono text-neutral-400 tracking-wider">
+          A digital record player crafting curated soundscapes for your exact vibe.
         </p>
       </div>
 
@@ -107,20 +110,21 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Recommended Songs Editorial List */}
-      <div ref={resultsRef} className="space-y-6 pt-8 border-t border-[#D8D3C8]">
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-[#D8D3C8] pb-3">
+      {/* Recommended Songs Editorial Section with High-Contrast Dark Header Block */}
+      <div ref={resultsRef} className="space-y-6 pt-4">
+        {/* Dark Editorial Title Box */}
+        <div className="bg-[#151515] text-white p-6 border border-[#262626] shadow-lg flex flex-col sm:flex-row sm:items-baseline justify-between gap-3">
           <div>
-            <h2 className="font-serif text-3xl text-[#111111] uppercase tracking-tight">
+            <h2 className="font-serif text-3xl sm:text-4xl text-white uppercase tracking-tight">
               YOUR RECOMMENDED MIX
             </h2>
             {mixTitle && (
-              <p className="text-xs font-mono text-[#6B6B65] tracking-wider uppercase mt-1">
+              <p className="text-xs font-mono text-amber-400 tracking-wider uppercase mt-1">
                 SELECTION: {mixTitle}
               </p>
             )}
           </div>
-          <span className="text-xs font-mono text-[#6B6B65] tracking-widest uppercase">
+          <span className="text-xs font-mono text-neutral-400 tracking-widest uppercase">
             [{recommendations.length} TRACKS MATCHED]
           </span>
         </div>
