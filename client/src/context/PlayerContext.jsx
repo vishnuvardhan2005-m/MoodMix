@@ -6,7 +6,8 @@ export const PlayerProvider = ({ children }) => {
   const audioRef = useRef(null);
   const audioCtxRef = useRef(null);
   const analyserRef = useRef(null);
-  const sourceNodeRef = useRef(null);
+  const ytPlayerRef = useRef(null);
+  const ytTimerRef = useRef(null);
 
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -17,8 +18,9 @@ export const PlayerProvider = ({ children }) => {
   const [queue, setQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [audioError, setAudioError] = useState(null);
+  const [ytApiReady, setYtApiReady] = useState(false);
 
-  // Initialize HTML5 Audio instance once
+  // Initialize HTML5 Audio instance for direct audio tracks
   useEffect(() => {
     const audio = new Audio();
     audio.preload = 'auto';
@@ -26,16 +28,28 @@ export const PlayerProvider = ({ children }) => {
     audio.muted = false;
     audioRef.current = audio;
 
-    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const handleLoadedMetadata = () => {
-      setDuration(audio.duration || 0);
-      setAudioError(null);
+    const handleTimeUpdate = () => {
+      if (!currentSong?.youtubeVideoId) {
+        setCurrentTime(audio.currentTime);
+      }
     };
-    const handleEnded = () => playNext();
+    const handleLoadedMetadata = () => {
+      if (!currentSong?.youtubeVideoId) {
+        setDuration(audio.duration || 0);
+        setAudioError(null);
+      }
+    };
+    const handleEnded = () => {
+      if (!currentSong?.youtubeVideoId) {
+        playNext();
+      }
+    };
     const handleError = (e) => {
-      console.warn('Audio element load warning:', audio.src, e);
-      setAudioError('Unable to load audio track source.');
-      setIsPlaying(false);
+      if (!currentSong?.youtubeVideoId) {
+        console.warn('Audio element load error:', audio.src, e);
+        setAudioError('Unable to load audio track source.');
+        setIsPlaying(false);
+      }
     };
 
     audio.addEventListener('timeupdate', handleTimeUpdate);
@@ -51,46 +65,117 @@ export const PlayerProvider = ({ children }) => {
       audio.removeEventListener('durationchange', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('error', handleError);
+    };
+  }, [currentSong]);
 
-      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
-        audioCtxRef.current.close().catch(() => {});
-      }
+  // Load YouTube IFrame Player API
+  useEffect(() => {
+    if (window.YT && window.YT.Player) {
+      setYtApiReady(true);
+      return;
+    }
+
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    if (firstScriptTag && firstScriptTag.parentNode) {
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    } else {
+      document.head.appendChild(tag);
+    }
+
+    window.onYouTubeIframeAPIReady = () => {
+      setYtApiReady(true);
     };
   }, []);
 
-  // Web Audio API analyzer setup - keeps HTML5 native sound output active & audible
-  const setupWebAudio = () => {
-    if (!audioRef.current) return;
-
-    try {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContextClass) return;
-
-      if (!audioCtxRef.current) {
-        audioCtxRef.current = new AudioContextClass();
-      }
-
-      const audioCtx = audioCtxRef.current;
-
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume().catch(() => {});
-      }
-
-      if (!analyserRef.current) {
-        const analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 256;
-        analyser.smoothingTimeConstant = 0.8;
-        analyserRef.current = analyser;
-      }
-    } catch (err) {
-      console.warn('Web Audio setup note:', err.message);
+  // Poll YouTube player time when playing
+  useEffect(() => {
+    if (isPlaying && currentSong?.youtubeVideoId && ytPlayerRef.current) {
+      ytTimerRef.current = setInterval(() => {
+        try {
+          if (ytPlayerRef.current.getCurrentTime) {
+            setCurrentTime(ytPlayerRef.current.getCurrentTime() || 0);
+          }
+          if (ytPlayerRef.current.getDuration) {
+            setDuration(ytPlayerRef.current.getDuration() || 0);
+          }
+        } catch (err) {
+          // ignore transient iframe poll errors
+        }
+      }, 500);
+    } else {
+      if (ytTimerRef.current) clearInterval(ytTimerRef.current);
     }
+
+    return () => {
+      if (ytTimerRef.current) clearInterval(ytTimerRef.current);
+    };
+  }, [isPlaying, currentSong]);
+
+  // Initialize YouTube IFrame Player instance
+  const initYouTubePlayer = (videoId) => {
+    return new Promise((resolve) => {
+      if (ytPlayerRef.current) {
+        ytPlayerRef.current.loadVideoById(videoId);
+        resolve(ytPlayerRef.current);
+        return;
+      }
+
+      let playerContainer = document.getElementById('youtube-player-element');
+      if (!playerContainer) {
+        playerContainer = document.createElement('div');
+        playerContainer.id = 'youtube-player-element';
+        playerContainer.style.position = 'absolute';
+        playerContainer.style.top = '-9999px';
+        playerContainer.style.left = '-9999px';
+        playerContainer.style.width = '1px';
+        playerContainer.style.height = '1px';
+        document.body.appendChild(playerContainer);
+      }
+
+      ytPlayerRef.current = new window.YT.Player('youtube-player-element', {
+        height: '1',
+        width: '1',
+        videoId: videoId,
+        playerVars: {
+          autoplay: 1,
+          controls: 0,
+          modestbranding: 1,
+          rel: 0
+        },
+        events: {
+          onReady: (event) => {
+            event.target.setVolume(isMuted ? 0 : volume * 100);
+            event.target.playVideo();
+            resolve(event.target);
+          },
+          onStateChange: (event) => {
+            // YT.PlayerState: 1 = PLAYING, 2 = PAUSED, 0 = ENDED
+            if (event.data === 1) {
+              setIsPlaying(true);
+              setAudioError(null);
+            } else if (event.data === 2) {
+              setIsPlaying(false);
+            } else if (event.data === 0) {
+              setIsPlaying(false);
+              playNext();
+            }
+          },
+          onError: (err) => {
+            console.warn('YouTube Player playback error:', err);
+            setAudioError('Unable to play YouTube video track.');
+            setIsPlaying(false);
+          }
+        }
+      });
+    });
   };
 
-  // Play a specific song
+  // Play song (handles YouTube tracks and direct audio)
   const playSong = (song, newQueue = []) => {
-    if (!song || !song.audioUrl) {
-      setAudioError('Invalid song audio URL.');
+    if (!song) {
+      setAudioError('Invalid song selection.');
       return;
     }
 
@@ -102,57 +187,66 @@ export const PlayerProvider = ({ children }) => {
       setQueue(newQueue);
     }
 
-    const index = activeQueue.findIndex((s) => s._id === song._id);
+    const index = activeQueue.findIndex((s) => s._id === song._id || (s.youtubeVideoId && s.youtubeVideoId === song.youtubeVideoId));
     setCurrentIndex(index !== -1 ? index : 0);
 
-    const audio = audioRef.current;
-    if (audio) {
+    // Stop HTML5 Audio if playing
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+
+    if (song.youtubeVideoId) {
+      if (window.YT && window.YT.Player) {
+        initYouTubePlayer(song.youtubeVideoId);
+      } else {
+        // Wait for API ready
+        const checkInterval = setInterval(() => {
+          if (window.YT && window.YT.Player) {
+            clearInterval(checkInterval);
+            initYouTubePlayer(song.youtubeVideoId);
+          }
+        }, 200);
+      }
+    } else if (song.audioUrl && audioRef.current) {
+      // Pause YouTube player if active
+      if (ytPlayerRef.current && ytPlayerRef.current.pauseVideo) {
+        try { ytPlayerRef.current.pauseVideo(); } catch (e) {}
+      }
+
+      const audio = audioRef.current;
       audio.src = song.audioUrl;
       audio.currentTime = 0;
       audio.volume = isMuted ? 0 : volume;
       audio.muted = isMuted;
 
-      setupWebAudio();
-
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true);
-            setAudioError(null);
-          })
-          .catch((err) => {
-            console.warn('Playback error / Autoplay policy:', err);
-            setIsPlaying(false);
-          });
-      }
+      audio.play()
+        .then(() => setIsPlaying(true))
+        .catch((err) => {
+          console.warn('Direct audio play error:', err);
+          setIsPlaying(false);
+        });
     }
   };
 
   const togglePlay = () => {
-    if (!audioRef.current || !currentSong) return;
+    if (!currentSong) return;
 
-    const audio = audioRef.current;
-    setupWebAudio();
-
-    if (isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
-    } else {
-      audio.volume = isMuted ? 0 : volume;
-      audio.muted = isMuted;
-
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true);
-            setAudioError(null);
-          })
-          .catch((err) => {
-            console.warn('Resume error:', err);
-            setIsPlaying(false);
-          });
+    if (currentSong.youtubeVideoId && ytPlayerRef.current) {
+      if (isPlaying) {
+        try { ytPlayerRef.current.pauseVideo(); } catch (e) {}
+        setIsPlaying(false);
+      } else {
+        try { ytPlayerRef.current.playVideo(); } catch (e) {}
+        setIsPlaying(true);
+      }
+    } else if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current.play()
+          .then(() => setIsPlaying(true))
+          .catch(() => setIsPlaying(false));
       }
     }
   };
@@ -167,9 +261,13 @@ export const PlayerProvider = ({ children }) => {
   };
 
   const playPrev = () => {
-    if (!audioRef.current) return;
-
-    if (audioRef.current.currentTime > 3) {
+    if (currentSong?.youtubeVideoId && ytPlayerRef.current && ytPlayerRef.current.getCurrentTime) {
+      if (ytPlayerRef.current.getCurrentTime() > 3) {
+        ytPlayerRef.current.seekTo(0, true);
+        setCurrentTime(0);
+        return;
+      }
+    } else if (audioRef.current && audioRef.current.currentTime > 3) {
       audioRef.current.currentTime = 0;
       setCurrentTime(0);
       return;
@@ -184,8 +282,13 @@ export const PlayerProvider = ({ children }) => {
   };
 
   const seekTo = (seconds) => {
-    if (audioRef.current) {
-      const targetTime = Math.max(0, Math.min(seconds, duration));
+    const targetTime = Math.max(0, Math.min(seconds, duration));
+    if (currentSong?.youtubeVideoId && ytPlayerRef.current && ytPlayerRef.current.seekTo) {
+      try {
+        ytPlayerRef.current.seekTo(targetTime, true);
+        setCurrentTime(targetTime);
+      } catch (err) {}
+    } else if (audioRef.current) {
       audioRef.current.currentTime = targetTime;
       setCurrentTime(targetTime);
     }
@@ -194,25 +297,44 @@ export const PlayerProvider = ({ children }) => {
   const setPlayerVolume = (val) => {
     const newVol = Math.max(0, Math.min(1, val));
     setVolume(newVol);
+
+    if (currentSong?.youtubeVideoId && ytPlayerRef.current && ytPlayerRef.current.setVolume) {
+      try {
+        ytPlayerRef.current.setVolume(isMuted ? 0 : newVol * 100);
+      } catch (err) {}
+    }
+
     if (audioRef.current) {
       audioRef.current.volume = isMuted ? 0 : newVol;
     }
+
     if (newVol > 0 && isMuted) {
       setIsMuted(false);
-      if (audioRef.current) audioRef.current.muted = false;
     }
   };
 
   const toggleMute = () => {
-    if (!audioRef.current) return;
     if (isMuted) {
-      audioRef.current.muted = false;
-      audioRef.current.volume = volume || 1.0;
       setIsMuted(false);
+      if (currentSong?.youtubeVideoId && ytPlayerRef.current && ytPlayerRef.current.unMute) {
+        try {
+          ytPlayerRef.current.unMute();
+          ytPlayerRef.current.setVolume(volume * 100);
+        } catch (err) {}
+      }
+      if (audioRef.current) {
+        audioRef.current.muted = false;
+        audioRef.current.volume = volume || 1.0;
+      }
     } else {
-      audioRef.current.muted = true;
-      audioRef.current.volume = 0;
       setIsMuted(true);
+      if (currentSong?.youtubeVideoId && ytPlayerRef.current && ytPlayerRef.current.mute) {
+        try { ytPlayerRef.current.mute(); } catch (err) {}
+      }
+      if (audioRef.current) {
+        audioRef.current.muted = true;
+        audioRef.current.volume = 0;
+      }
     }
   };
 
