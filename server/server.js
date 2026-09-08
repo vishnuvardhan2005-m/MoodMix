@@ -19,7 +19,15 @@ app.use(express.json());
 // Routes
 app.use('/api/songs', songRoutes);
 
-// Root health check endpoint
+// Root API health check endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    message: 'MoodMix Backend API is live on Render',
+    health: '/api/health'
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
