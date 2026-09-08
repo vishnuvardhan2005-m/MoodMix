@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import Logo from './Logo';
 
 const Header = () => {
   const location = useLocation();
@@ -12,11 +13,9 @@ const Header = () => {
         <Link
           to="/"
           aria-label="MoodMix Home Page"
-          className="group flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2.5 focus:outline-none"
+          className="group flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 focus:outline-none"
         >
-          <span className="font-serif text-xl sm:text-2xl tracking-tight text-[#111111] group-hover:opacity-80 transition-opacity">
-            MOODMIX
-          </span>
+          <Logo className="w-8 h-8 sm:w-9 sm:h-9" showText={true} textClassName="group-hover:opacity-80 transition-opacity" />
           <span className="text-[11px] font-mono tracking-widest text-[#6B6B65] uppercase">
             — a digital record player for your mood
           </span>
